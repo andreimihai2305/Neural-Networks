@@ -14,9 +14,9 @@ class Matrix:
 		return f"Matrix({self.rows}, {self.cols});"
 
 
-
 	def __len__ (self):
 		return len(self._mat)
+
 
 	def __getitem__(self, key):
 		try:
@@ -37,6 +37,7 @@ class Matrix:
 		except IndexError:
 			print(f"IndexError: Index out of range, Matrix size: ({self.rows}, {self.cols}) ")
 			exit(1)
+
 
 	def __setitem__(self, key, value):
 		row, col = key
@@ -75,6 +76,7 @@ class Matrix:
 			print(f"TypeError: {str(other)} can not be added to Matrix ({self.rows}, {self.cols})")
 			print(e)
 			exit(1)
+
 
 	def __sub__(self, other):
 		rows, cols = self.rows, self.cols
@@ -155,6 +157,7 @@ class Matrix:
 			print(e)
 			exit(1)
 
+
 	def set(self, mat: list[list]):
 		if not isinstance(mat, list):
 			print(f"Invalid Matrix: {str(mat)}")
@@ -223,26 +226,5 @@ class Matrix:
 				print(f"{(self._mat[i][j]):10f},", end=' ')
 			print()
 		print('];')
-
-
-		
-
-
-
-if __name__ == "__main__":
-	double = Matrix([
-	[1, 2],
-	[2, 4],
-	[3, 6],
-	[4, 8],
-	[5, 10],
-	[6, 12]
-])
-	mat2 = Matrix.sub_mat(double, (0, len(double)), (1, 2))
-	print(mat2)
-	mat2.print_mat()
-
-
-	
 
 

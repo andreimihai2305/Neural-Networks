@@ -9,6 +9,7 @@ class Perceptron:
 		self.bias = random.uniform(0, 1)
 		self.activation = activation
 
+
 	def __repr__(self):
 		if self.activation:
 			return f"Perceptron: Weight = {self.weight}, Bias = {self.bias}, Activation = {self.activation.__name__}"
@@ -45,24 +46,3 @@ class Perceptron:
 		self.bias -= dbias * lr
 
 
-
-
-if __name__ == "__main__":
-	p = Perceptron(relu)
-	double = Matrix([
-	[1, 2],
-	[2, 4],
-	[3, 6],
-	[4, 8],
-	[5, 10],
-	[6, 12]
-])
-
-
-	print(p.cost(double))
-	for i in range(100):
-		p.finite_diff(double, 1e-2, 1e-1)
-
-
-	print(p.cost(double))
-	
