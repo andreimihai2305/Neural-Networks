@@ -2,47 +2,57 @@ import random
 from activations import relu
 from matrix import Matrix
 
-
+# random.seed(42)
 class Perceptron:
-	def __init__(self, activation=None):
-		self.weight = random.uniform(0, 1)
-		self.bias = random.uniform(0, 1)
+	def __init__(self, input_size: int, activation):
+		self.weights = Matrix.rand(input_size, 1)
+		self.bias = random.uniform(0, 5)
 		self.activation = activation
+		self.input_size = input_size
 
 
 	def __repr__(self):
-		if self.activation:
-			return f"Perceptron: Weight = {self.weight}, Bias = {self.bias}, Activation = {self.activation.__name__}"
+		return f"Perceptron: Weight = {self.weight}, Bias = {self.bias}, Activation = {self.activation.__name__}"
 
-		else:
-			return f"Perceptron: Weight = {self.weight}, Bias = {self.bias}"
+	def feed_forward(self, sample):
+		return self.activation((self.weights * Matrix([sample]))[0, 0] + self.bias)
 
 
-	def cost(self, data: Matrix) -> float:
-		res = 0
-		for i in range(len(data)):
-			activation = self.activation(self.weight * data[i, 0] + self.bias)
-			cost = round((activation - data[i, 1]) ** 2, 8)
+	def cost(self, x_data: Matrix, y_data: Matrix) -> float:
+		
+		if len(x_data) != len(y_data):
+			print(f"X: {x_data} and y: {y_data} do not match")
+			return
+
+		res = 0	
+		for i in range(len(x_data)):
+			y_pred = self.feed_forward(x_data[i])
+
+			cost = (y_pred - y_data[i, 0]) ** 2
 			res += cost	
 
-		return (res / len(data))
+		return (res / len(x_data))
 
 
-	def finite_diff(self, data, eps, lr):
-		initial_cost = self.cost(data)
+	def finite_diff(self, x_data: Matrix, y_data: Matrix, eps: float, lr: float) -> None:
+		initial_cost = self.cost(x_data, y_data)
+		dweights = Matrix.zero(self.input_size, 1)
 		
-		save_weight = self.weight
-		save_bias = self.bias
+		for i in range(self.input_size):
 
-		self.weight += eps
-		dweight = self.cost(data) - initial_cost
-		self.weight -= eps
+			self.weights[i, 0] += eps
+			dweights[i, 0] = (self.cost(x_data, y_data) - initial_cost) / eps
+			self.weights[i, 0] -= eps 
+			
 
+		
 		self.bias += eps
-		dbias = self.cost(data) - initial_cost
+		dbias = (self.cost(x_data, y_data) - initial_cost) / eps
 		self.bias -= eps
+		
 
-		self.weight -= dweight * lr
+		self.weights -= dweights * lr
 		self.bias -= dbias * lr
+
 
 
