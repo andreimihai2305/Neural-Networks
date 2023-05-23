@@ -11,7 +11,7 @@ class Perceptron:
 
 
 	def __repr__(self):
-		return f"Perceptron: Weight = {self.weight}, Bias = {self.bias}, Activation = {self.activation.__name__}"
+		return f"Perceptron: Weight = {self.weights._mat}, Bias = {self.bias}, Activation = {self.activation.__name__}"
 
 	def feed_forward(self, sample):
 		return self.activation((Matrix([sample]) * self.weights)[0, 0] + self.bias)
@@ -27,7 +27,7 @@ class Perceptron:
 		for i in range(len(x_data)):
 			y_pred = self.feed_forward(x_data[i])
 
-			cost = (y_pred - y_data[i, 0]) ** 2
+			cost = (y_pred - y_data[i, 0]) ** 4
 			res += cost	
 
 		return (res / len(x_data))

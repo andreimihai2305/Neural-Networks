@@ -1,6 +1,7 @@
 import random
 from sys import exit
 
+
 class Matrix:
 
 	def __init__(self, mat=[[]]):
