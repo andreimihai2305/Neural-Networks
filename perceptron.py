@@ -1,12 +1,11 @@
 import random
-from activations import relu
 from matrix import Matrix
 
-# random.seed(42)
+
 class Perceptron:
 	def __init__(self, input_size: int, activation):
-		self.weights = Matrix.rand(input_size, 1)
-		self.bias = random.uniform(0, 5)
+		self.weights = Matrix.rand(input_size, 1, 0, 5)
+		self.bias = random.uniform(0, 10)
 		self.activation = activation
 		self.input_size = input_size
 
@@ -15,7 +14,7 @@ class Perceptron:
 		return f"Perceptron: Weight = {self.weight}, Bias = {self.bias}, Activation = {self.activation.__name__}"
 
 	def feed_forward(self, sample):
-		return self.activation((self.weights * Matrix([sample]))[0, 0] + self.bias)
+		return self.activation((Matrix([sample]) * self.weights)[0, 0] + self.bias)
 
 
 	def cost(self, x_data: Matrix, y_data: Matrix) -> float:
@@ -39,20 +38,20 @@ class Perceptron:
 		dweights = Matrix.zero(self.input_size, 1)
 		
 		for i in range(self.input_size):
-
+			saved_w = self.weights[i, 0] 
 			self.weights[i, 0] += eps
 			dweights[i, 0] = (self.cost(x_data, y_data) - initial_cost) / eps
-			self.weights[i, 0] -= eps 
-			
+			self.weights[i, 0] = saved_w
 
-		
+
+		saved_bias = self.bias
 		self.bias += eps
 		dbias = (self.cost(x_data, y_data) - initial_cost) / eps
-		self.bias -= eps
+		self.bias = saved_bias
 		
 
-		self.weights -= dweights * lr
-		self.bias -= dbias * lr
+		self.weights -= (dweights * lr)
+		self.bias -= (dbias * lr)
 
 
 
