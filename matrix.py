@@ -3,11 +3,11 @@ from sys import exit
 
 class Matrix:
 
-	def __init__(self, mat=[[]], dec=4):
+	def __init__(self, mat=[[]]):
 		self._mat = self.set(mat)
 		self.rows = len(mat)
 		self.cols = len(mat[0]) if isinstance(mat[0], list) else 1
-		self.dec = dec
+
 		
 
 	def __repr__(self):
@@ -60,12 +60,11 @@ class Matrix:
 				raise TypeError
 
 			if rows == other.rows and cols == other.cols:
-				dec = self.dec if self.dec > other.dec else other.dec
 				res = Matrix([[0 for j in range(cols)] for i in range(rows)])
 
 				for i in range(rows):
 					for j in range(cols):
-						res[i, j] = round(self[i, j] + other[i, j], self.dec)
+						res[i, j] = self[i, j] + other[i, j]
 
 				return res 
 
@@ -85,12 +84,12 @@ class Matrix:
 				raise TypeError
 
 			if rows == other.rows and cols == other.cols:
-				dec = self.dec if self.dec > other.dec else other.dec
+				
 				res = Matrix([[0 for j in range(cols)] for i in range(rows)])
 
 				for i in range(rows):
 					for j in range(cols):
-						res[i, j] = round(self[i, j] - other[i, j], self.dec)
+						res[i, j] = self[i, j] - other[i, j]
 
 				return res 
 
@@ -120,8 +119,8 @@ class Matrix:
 	def __mul__(self, other):
 		try:
 			# Scalar Multiplication
-			if isinstance(other, int):
-				dec = self.dec
+			if isinstance(other, float):
+
 				prod = Matrix([[0 for j in range(self.cols)] for i in range(self.rows)])
 	
 				for i in range(self.rows):
@@ -132,7 +131,6 @@ class Matrix:
 
 			# Matrix Multiplication
 			elif isinstance(other, Matrix):
-				dec = self.dec if self.dec > other.dec else other.dec
 				prod = self.zero(self.rows, other.cols)
 				
 				if (self.cols == other.rows):
@@ -140,7 +138,7 @@ class Matrix:
 						for j in range(other.cols):
 							row_sum = 0
 							for k in range(self.cols):
-								row_sum += self[i,k] * other[k,j]
+								row_sum += self[i, k] * other[k, j]
 
 							prod[i,j] = row_sum
 	
@@ -214,8 +212,8 @@ class Matrix:
 
 	# Random Matrix
 	@classmethod	
-	def rand(cls, rows, cols,low=0, high=1, dec=4):
-		return cls([[round(random.uniform(low, high), dec) for j in range(cols)] for i in range(rows)], dec)
+	def rand(cls, rows, cols,low=0, high=1):
+		return cls([[random.uniform(low, high) for j in range(cols)] for i in range(rows)])
 
 	
 	def print_mat(self) -> None:
